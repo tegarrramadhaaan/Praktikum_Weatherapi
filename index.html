@@ -149,7 +149,15 @@
           $("#hasil").removeClass("hide");
 
           $("#lokasi").html(`${data.location.name}, ${data.location.country}`);
-         
+          $("#region").html(`Kecamatan/Wilayah: ${data.location.region}`);
+          $("#suhu").html(`${data.current.temp_c}°C / ${data.current.temp_f}°F`);
+          $("#kondisi").html(data.current.condition.text);
+          $("#ikon").attr("src", "https:" + data.current.condition.icon);
+          $("#angin").html(data.current.wind_kph);
+          $("#kelembapan").html(data.current.humidity);
+          $("#lat").html(data.location.lat);
+          $("#lon").html(data.location.lon);
+          $("#update").html(`Terakhir diperbarui: ${data.current.last_updated}`);
         },
         error: function(error) {
           console.error(error);
