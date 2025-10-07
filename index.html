@@ -152,6 +152,7 @@
           $("#region").html(`Kecamatan/Wilayah: ${data.location.region}`);
           $("#suhu").html(`${data.current.temp_c}°C / ${data.current.temp_f}°F`);
           $("#kondisi").html(data.current.condition.text);
+          $("#ikon").attr("src", "https:" + data.current.condition.icon);
           
         },
         error: function(error) {
