@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informasi Cuaca Lengkap</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(to bottom right, #74b9ff, #dfe6e9);
+      color: #2d3436;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .search-box {
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px;
+      width: 250px;
+      border-radius: 10px;
+      border: 1px solid #b2bec3;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      border: none;
+      background-color: #0984e3;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #74b9ff;
+    }
+
+    .cuaca-box {
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      display: inline-block;
+      padding: 30px 50px;
+      margin-top: 20px;
+      max-width: 400px;
+    }
+
+    .lokasi {
+      font-size: 24px;
+      font-weight: bold;
+      color: #0984e3;
+    }
+
+    .region {
+      font-size: 18px;
+      color: #636e72;
+      margin-bottom: 10px;
+    }
+
+    .suhu {
+      font-size: 50px;
+      margin: 15px 0;
+      font-weight: bold;
+      color: #d63031;
+    }
+
+    .info {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+
+    img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .update {
+      font-size: 12px;
+      color: gray;
+      margin-top: 10px;
+    }
+
+    .coord {
+      font-size: 14px;
+      color: #636e72;
+    }
+
+    .hide {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌦️ Informasi Cuaca Lengkap</h1>
+
+  <div class="container">
+    <div class="search-box">
+      <input type="text" id="kota" placeholder="Masukkan nama kota (contoh: Bandung)">
+      <button id="btnGet">GET CUACA</button>
+    </div>
+
+    <div class="cuaca-box hide" id="hasil">
+      <p class="lokasi" id="lokasi"></p>
+      <p class="region" id="region"></p>
+      <img id="ikon" src="" alt="Ikon Cuaca">
+      <p class="suhu" id="suhu"></p>
+      <p class="info" id="kondisi"></p>
+      <p class="info">💨 Angin: <span id="angin"></span> km/jam</p>
+      <p class="info">💧 Kelembapan: <span id="kelembapan"></span>%</p>
+      <p class="coord">📍 Latitude: <span id="lat"></span> | Longitude: <span id="lon"></span></p>
+      <p class="update" id="update"></p>
+    </div>
+  </div>
+
+  <script>
+    const apiKey = "17d5219d5bbb42f992820839250710";
+
+    $("#btnGet").on("click", function() {
+      const kota = $("#kota").val().trim();
+
+      if (kota === "") {
+        alert("⚠️ Masukkan nama kota terlebih dahulu!");
+        return;
+      }
+
+      const apiURL = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${kota}&aqi=no`;
+
+      $.ajax({
+        url: apiURL,
+        method: "GET",
+        success: function(data) {
+          console.log(data);
+
+          // tampilkan hasil
+          $("#hasil").removeClass("hide");
+
+          $("#lokasi").html(`${data.location.name}, ${data.location.country}`);
+          $("#region").html(`Kecamatan/Wilayah: ${data.location.region}`);
+          $("#suhu").html(`${data.current.temp_c}°C / ${data.current.temp_f}°F`);
+          $("#kondisi").html(data.current.condition.text);
+          $("#ikon").attr("src", "https:" + data.current.condition.icon);
+          $("#angin").html(data.current.wind_kph);
+          $("#kelembapan").html(data.current.humidity);
+          $("#lat").html(data.location.lat);
+          $("#lon").html(data.location.lon);
+          $("#update").html(`Terakhir diperbarui: ${data.current.last_updated}`);
+        },
+        error: function(error) {
+          console.error(error);
+          alert("❌ Gagal memuat data cuaca. Pastikan nama kota benar.");
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
